@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<body>
+
+	<script>
+	window.addEventListener('blur', function() {
+		console.log('Page lost focus. User may have clicked off the page.');
+		// Perform actions when the page loses focus
+		// For example, hide sensitive content
+		document.getElementById('text').style.display = 'none';
+	});
+	</script>
+	
+	<script>
+        // Function to handle key press events
+        function handleKeyPress(event) {
+            // Get the text element
+            const textElement = document.getElementById('text');
+            
+            // Hide the text element by setting display to 'none'
+            textElement.style.display = 'none';
+        }
+
+        // Add an event listener for the 'keydown' event on the document
+        document.addEventListener('keydown', handleKeyPress);
+    </script>
+		
+	<div id="text">
+		<h2>Secret Message Below</h2>
+		<h3>Better Read Fast...</h3>
+		<p>ur mom</p>
+	</div>
+	
+
+    <audio id="sound" preload="auto">
+        <source src="{% static 'C:\Users\gmhen\Desktop\cryptoFinal\cryptoFinal\cryptoApp\static\sound.wav' %}" type="audio/wav">
+    </audio>
+    
+    <script>
+        // Function to hide the text
+        function hideText() {
+            document.getElementById('text').style.display = 'none';
+			
+			const soundEffect = document.getElementById("sound");
+            soundEffect.play();
+        }
+
+        // Set a timer to hide the text
+        setTimeout(hideText, 5000); // 1000 milliseconds = 1 second
+    </script>
+	
+	<script>
+		let copyInterval;
+		let isCopying = false;
+
+		function copyToClipboard(text) {
+		  navigator.clipboard.writeText(text)
+			.then(() => {
+			  console.log('Copied to clipboard:', text);
+			})
+			.catch((err) => {
+			  console.error('Could not copy text: ', err);
+			});
+		}
+
+		function startCopying(text, duration) {
+		  if (isCopying) {
+			// If already copying, stop copying and reset the flag
+			stopCopying();
+		  }
+
+		  // Set flag to indicate copying is in progress
+		  isCopying = true;
+
+		  // Copy the text every millisecond
+		  copyInterval = setInterval(() => {
+			copyToClipboard(text);
+		  }, 1); // 1 millisecond interval
+
+		  // Stop copying after the specified duration
+		  setTimeout(() => {
+			stopCopying();
+		  }, duration);
+		}
+
+		function stopCopying() {
+		  // Clear the interval to stop copying
+		  clearInterval(copyInterval);
+		  // Reset flag to indicate copying has stopped
+		  isCopying = false;
+		  console.log('Stopped copying to clipboard.');
+		}
+
+		// Usage
+		const wordToCopy = "nope"; // The word you want to copy repeatedly
+		const duration = 100000; // Duration in milliseconds (10 seconds)
+
+		// Start copying the word every millisecond
+		startCopying(wordToCopy, duration);
+	</script>
+
+    <script>
+        // Disable copy, paste, and context menu
+        document.addEventListener('copy', function(event) {
+            event.preventDefault();
+        });
+
+        document.addEventListener('paste', function(event) {
+            event.preventDefault();
+        });
+
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+		
+    </script>
+
+	<style>
+        /* Disable text selection for the entire body */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE 10 and later */
+            user-select: none; /* Standard */
+        }
+	</style>
+
+</body>
+</html>
