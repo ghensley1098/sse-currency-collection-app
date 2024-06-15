@@ -1,0 +1,6 @@
+<h1>{{ mcollection.cName }}</h1>
+<ul>
+{% for entry in mcollection.entry_set.all %}
+    <li>{{ entry.eName }}</li>
+{% endfor %}
+</ul>
