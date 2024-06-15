@@ -120,10 +120,12 @@ STATIC_URL = 'static/'
 
 # If you have a custom static files directory
 STATICFILES_DIRS = [
-    BASE_DIR / "static/",
+    BASE_DIR / 'polls/static/',
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'polls.CustomUser'
