@@ -12,5 +12,8 @@ class CollectionAdmin(admin.ModelAdmin):
         ('Date Information', {'fields': ['cDate'], "classes": ['collapse']})
     ]
     inlines = [ChoiceInLine]
+    list_display = ['cName','cDate','was_published_recently']
+    list_filter = ['cDate']
+    search_fields = ['cName']
 
 admin.site.register(mCollection, CollectionAdmin)
