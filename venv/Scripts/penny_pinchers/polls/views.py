@@ -6,7 +6,7 @@ from django.views import generic
 # from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views import generic
-from polls.forms import UserCreationForm
+from .forms import UserCreationForm
 
 # from .models import Choice, Question
 
