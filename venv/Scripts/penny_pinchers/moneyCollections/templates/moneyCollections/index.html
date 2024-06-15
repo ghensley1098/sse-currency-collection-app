@@ -1,0 +1,9 @@
+{% if latest_collection_list %}
+    <ul>
+    {% for mcollection in latest_collection_list %}
+        <li><a href="{% url 'mcollections:detail' mcollection.id %}">{{ mcollection.cName }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No collections are available.</p>
+{% endif %}
