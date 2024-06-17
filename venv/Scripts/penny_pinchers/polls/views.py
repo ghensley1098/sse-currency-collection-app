@@ -83,6 +83,9 @@ def custom_login_view(request):
                 return redirect('dashboard')
     return render(request, 'polls/login.html')
 
+def index_view(request):
+    return render(request, 'polls/index.html')
+
 @login_required
 def dashboard_view(request):
     return render(request, 'polls/dashboard.html')
