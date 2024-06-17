@@ -15,7 +15,7 @@ This project was created using Python Django to create a web app allowing users 
 # Installation 
 1. Clone the repository 
 2. Ensure correct directory is:
-C:\Users\[username]\ [saved location]\ collections\venv\Scripts\penny_pinchers>
+C:\Users\[username]\ [saved location]\ [foldername] \venv\Scripts\penny_pinchers>
 username is your computer username 
 saved location is where the clone lives 
 3.Open command prompt or terminal and enter this command:
