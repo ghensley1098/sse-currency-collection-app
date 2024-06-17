@@ -4,7 +4,7 @@
 
 ## Description:
 
-This project was created using Python Django to create a web app allowing users to record their money collections. Every aspect of this project entails the following features: 
+This project was created using Python Django to create a web app allowing users to record their money collections. This project entails the following features: 
 
 1. Create and manage multiple collections
 2. Add detailed entries to each piece of money (year, place, country of printing, and quality).
