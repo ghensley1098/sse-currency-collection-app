@@ -2,21 +2,88 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Polls</title>
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-</head>
-<body>
-    {% if latest_question_list %}
-        <ul>
-        {% for question in latest_question_list %}
-            <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No polls are available.</p>
-    {% endif %}
-</body>
-</html>
 
+<head>
+  <meta charset="UTF-8">
+  <title>The Currency Collector Center</title>
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top navbarScroll">
+    <div class="container-fluid px-5">
+      <a class="titleText navbar-brand" href="/"><b>The Currency Collector Center</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/signup">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/login">Log In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/admin">Administrator Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div style="padding-top: 85px; padding-bottom: 10px;">
+    <a class="anchor" id="home"></a>
+    <div class="rectFrame center mainbox" style="padding-top: 5px; padding-bottom: 5px;">
+      <div class="right-sidebar">
+        <div>
+          <h1 style="color: white;">Welcome to the Currency Collector Center!</h1>
+          <h4 style="color: white;">We provide a service you may not have thought you
+            needed.
+          </h4>
+          <h5 style="color: white;">
+            Getting tired of tons of
+            spreadsheets detailing your collection?
+          </h5>
+          <h5 style="color: white;">
+            Finding yourself forgetting if you've already got that silver
+            dollar?
+          </h5>
+          <h5 style="color: white;">
+            Need to take a quick look at your collection away
+            from home?
+          </h5>
+          <h4 style="color: white;">
+            Don't worry, because the Currency Collector Center is here for you!
+          </h4>
+        </div>
+        <div>
+          <img src="{% static 'polls/images/Coins.jpg' %}" width="100%" style="border-radius: 16px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding-top: 10px; padding-bottom: 10px;">
+    <a class="anchor" id="about"></a>
+    <div class="rectFrame center mainbox" style="padding-top: 25px; padding-bottom: 25px;">
+      <div style="margin-left: 20px; margin-right: 20px;">
+        <h1 style="color: white;">About Us</h1>
+        <h5 style="color: white;">We have been providing our services since 2024 to help you manage your collection.
+          Many on our team are collectors themselves, and are passionate about providing the best service possible. Our
+          goal is to make money collecting as easy as possible, letting you spend more time collecting and less time
+          managing spreadsheets. Click the links above to create an account or log in to your existing account. We look forward to doing buisiness with you!</h5>
+          <img src="{% static 'polls/images/signature.png' %}" width="320px">
+          <h3 style="color:white;">John Collector, CEO</h3>
+      </div>
+    </div>
+
+</body>
+
+</html>
