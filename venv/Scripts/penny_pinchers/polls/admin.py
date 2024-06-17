@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
+from .models import mCollection, mEntry
 
 class CustomUserAdmin(UserAdmin):
     # Define the fields to be used in displaying the CustomUser model.
@@ -27,28 +28,18 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 
 
-# from django.contrib import admin
-# from django.contrib.auth.admin import UserAdmin
-# from .models import CustomUser
-# from .models import Choice
+class ChoiceInLine(admin.StackedInline):
+    model = mEntry
+    extra = 1
 
+class CollectionAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {"fields": ['cName']}),
+        ('Date Information', {'fields': ['cDate'], "classes": ['collapse']})
+    ]
+    inlines = [ChoiceInLine]
+    list_display = ['cName','cDate','was_published_recently']
+    list_filter = ['cDate']
+    search_fields = ['cName']
 
-# class ChoiceInline(admin.TabularInline):
-#     model = Choice
-#     extra = 3
-
-
-# class QuestionAdmin(admin.ModelAdmin):
-#     fieldsets = [
-#         (None, {"fields": ["question_text"]}),
-#         ("Date information", {"fields": ["pub_date"], "classes": ["collapse"]}),
-#     ]
-#     inlines = [ChoiceInline]
-#     list_display = ["question_text", "pub_date"]
-#     list_display = ["question_text", "pub_date", "was_published_recently"]
-#     list_filter = ["pub_date"]
-#     search_fields = ["question_text"]
-
-
-# #admin.site.register(Question, QuestionAdmin)
-# admin.site.register(CustomUser, UserAdmin)
+admin.site.register(mCollection, CollectionAdmin)

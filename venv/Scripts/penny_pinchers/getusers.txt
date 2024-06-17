@@ -1,0 +1,8 @@
+# simple python script to pull usernames, emails, and hashed passwords to demonstrate hashing
+# use 'python manage.py shell' and then copy and paste this script
+
+from models import CustomUser
+
+users = CustomUser.objects.all()
+for user in users:
+    print(f"Username: {user.username}, Email: {user.email}, Password: {user.password}")
