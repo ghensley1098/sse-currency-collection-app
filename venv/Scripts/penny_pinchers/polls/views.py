@@ -78,9 +78,7 @@ def custom_login_view(request):
             if not CustomUser.objects.filter(username=username).exists():
                 messages.error(request, 'Username does not exist.')
             else:
-                #messages.error(request, 'Password is incorrect.')
-                login(request, user)
-                return redirect('dashboard')
+                messages.error(request, 'Password is incorrect.')
     return render(request, 'polls/login.html')
 
 def index_view(request):
