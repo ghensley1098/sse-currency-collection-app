@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
+from django.contrib.auth.models import Group
 
 # from .models import Choice, Question
 
@@ -71,6 +72,7 @@ def custom_login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
             return redirect('dashboard')

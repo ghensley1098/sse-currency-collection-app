@@ -33,8 +33,13 @@ class ChoiceInLine(admin.StackedInline):
     extra = 1
 
 class CollectionAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(created_by=request.user)
     fieldsets = [
-        (None, {"fields": ['cName']}),
+        (None, {"fields": ['cName', 'created_by']}),
         ('Date Information', {'fields': ['cDate'], "classes": ['collapse']})
     ]
     inlines = [ChoiceInLine]
@@ -43,3 +48,19 @@ class CollectionAdmin(admin.ModelAdmin):
     search_fields = ['cName']
 
 admin.site.register(mCollection, CollectionAdmin)
+
+class EntryAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(created_by=request.user)
+    fieldsets = [
+        (None, {"fields": ['eName']}),
+        ('Entry Information', {'fields': ['eCollection, eCountry, eQuality'], "classes": ['collapse']})
+    ]
+    list_display = ['eName','eCollection','eQuality']
+    list_filter = ['eCollection']
+    search_fields = ['eName']
+
+admin.site.register(mEntry, EntryAdmin)
