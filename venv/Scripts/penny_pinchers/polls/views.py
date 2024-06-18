@@ -12,6 +12,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
+from django.contrib.auth.models import Group
 
 # from .models import Choice, Question
 
@@ -81,6 +82,7 @@ def custom_login_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             login(request, user)
             return redirect('dashboard')
@@ -88,9 +90,7 @@ def custom_login_view(request):
             if not CustomUser.objects.filter(username=username).exists():
                 messages.error(request, 'Username does not exist.')
             else:
-                #messages.error(request, 'Password is incorrect.')
-                login(request, user)
-                return redirect('dashboard')
+                messages.error(request, 'Password is incorrect.')
     return render(request, 'polls/login.html')
 
 def index_view(request):

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
-
+from django.contrib.auth.models import Group
 
 class UserCreationForm(UserCreationForm):
     fname = forms.CharField(max_length=30, required=True)
@@ -9,13 +9,16 @@ class UserCreationForm(UserCreationForm):
     birth_year = forms.DateField(required=True)
     email = forms.CharField(required=True)
     username = forms.CharField(max_length=15, required=True)
-
     class Meta:
         model = CustomUser
         fields = ('username', 'fname', 'lname', 'birth_year', 'email')
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.is_staff = True
+        group = Group.objects.get(name='NormalUser')
+        user.save()
+        user.groups.add(group)
         # Concatenate initials and birth year to the password
         initials = user.first_name + user.last_name
         birth_year = user.birth_year
