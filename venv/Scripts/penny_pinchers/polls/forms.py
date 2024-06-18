@@ -19,10 +19,10 @@ class UserCreationForm(UserCreationForm):
         group = Group.objects.get(name='NormalUser')
         user.save()
         user.groups.add(group)
-        # Concatenate initials and birth year to the password
-        initials = user.first_name + user.last_name
-        birth_year = user.birth_year
-        user.set_password(str(hash(user.password + initials + str(birth_year))))
-        if commit:
-            user.save()
+        # # Concatenate initials and birth year to the password
+        # initials = user.first_name + user.last_name
+        # birth_year = user.birth_year
+        # user.set_password(user.password)
+        # if commit:
+        #     user.save()
         return user
