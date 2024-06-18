@@ -41,15 +41,53 @@
 
   <div style="padding-top: 85px; padding-bottom: 10px;">
     <a class="anchor" id="home"></a>
-    <div class="rectFrame center mainboxThin" style="padding-top: 5px; padding-bottom: 5px;">
+    <div class="rectFrame center mainbox" style="padding-top: 5px; padding-bottom: 5px;">
 
-      <h1 class="titleText">Welcome</h1>
+      <h1 class="titleText">Welcome!</h1>
       <div>
-        <h2>Sign Up</h2>
         <form method="post">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">Sign Up</button>
+          <div class="right-sidebar">
+            <div>
+              <h4 style="color:white">First Name:</h4>
+              <input style="width:100%" type="text" name="fname" required>
+              <h4 style="color:white">Last Name:</h4>
+              <input style="width:100%" type="text" name="lname" required>
+              <h4 style="color:white">Birthday:</h4>
+              <input style="width:100%" type="date" name="birth_year" required>
+              <h4 style="color:white">Email:</h4>
+              <input style="width:100%" type="text" name="email" required>
+              <h4 style="color:white">Username:</h4>
+              <input style="width:100%" type="text" name="username" required>
+              <h4 style="color:white">Password:</h4>
+              <input style="width:100%" type="password" name="password1" required>
+              <h4 style="color:white">Confirm your Password:</h4>
+              <input style="width:100%" type="password" name="password2" required>
+              <div style="padding-top:20px">
+                <button type="submit" class="roundedButton center" style="width: 50%;">Sign Up</button>
+              </div>
+            </div>
+            <div>
+              <h4 style="color: white;">Password Rules:</h4>
+              <ul style="color: white;">
+                <li>Your password can’t be too similar to your other personal
+                  information. </li>
+                <li>Your password must contain at least 8 characters. </li>
+                <li>Your password can’t be a commonly used password. </li>
+                <li>Your password can’t be entirely numeric. </li>
+              </ul>
+
+              {% if messages %}
+              <div class="messages">
+                {% for message in messages %}
+                <div style="color:white; padding-top: 150px;" class="alert {% if message.tags %}alert-{{ message.tags }}" {% endif %}>
+                  {{ message }}
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+            </div>
         </form>
       </div>
     </div>

@@ -43,7 +43,7 @@
     <a class="anchor" id="home"></a>
     <div class="rectFrame center mainboxThin" style="padding-top: 5px; padding-bottom: 5px;">
 
-      <h1 class="titleText">Welcome Back</h1>
+      <h1 class="titleText">Welcome Back!</h1>
       <div>
         <form method="post">
           {% csrf_token %}
@@ -52,20 +52,20 @@
           {% endfor %}
           <div class="center2">
             <div>
-            <h4 style="color:white">Username:</h4>
-            <input style="width:100%" type="text" name="username" required class="">
-            <h4 style="color:white">Password:</h4>
-            <input style="width:100%" type="password" name="password" required>
-            <a href="https://google.com">Forgot your password?</a>
+              <h4 style="color:white">Username:</h4>
+              <input style="width:100%" type="text" name="username" required>
+              <h4 style="color:white">Password:</h4>
+              <input style="width:100%" type="password" name="password" required>
+              <a href="https://google.com">Forgot your password?</a>
             </div>
             <div style="padding-top:20px">
-            <button type="submit" class="roundedButton center" style="width: 50%;">Login</button>
+              <button type="submit" class="roundedButton center" style="width: 50%;">Login</button>
             </div>
           </div>
-          </div>
-        </form>
       </div>
+      </form>
     </div>
+  </div>
   </div>
 
 

@@ -62,10 +62,20 @@ from django.contrib.auth.models import Group
 #         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
 
-class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'polls/signup.html'
+# class SignUpView(generic.CreateView):
+#     form_class = UserCreationForm
+#     success_url = reverse_lazy('login')
+#     template_name = 'polls/signup.html'
+
+def custom_signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            print(form.save())
+            return redirect('login')
+        else: 
+            messages.error(request, 'Error: Your passwords do not follow the rules or do not match.')
+    return render(request, 'polls/signup.html')
 
 def custom_login_view(request):
     if request.method == 'POST':
