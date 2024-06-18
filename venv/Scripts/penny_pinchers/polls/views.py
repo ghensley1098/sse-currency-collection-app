@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import CustomUser
+from .models import CustomUser, mCollection, mEntry
 from django.contrib.auth.models import Group
 
 # from .models import Choice, Question
@@ -98,4 +98,22 @@ def index_view(request):
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'polls/dashboard.html')
+    # Get the list of tasks from the database
+    collections = mCollection.objects.filter(created_by = request.user)
+
+    selectedCollectionName = request.GET.get('selection', None)
+    
+    selectedCollectionEntries = None
+
+    if selectedCollectionName is not None:
+        query = mCollection.objects.filter(cName = selectedCollectionName)
+        if query.exists():
+            selectedCollection = query.first()
+            selectedCollectionEntries = mEntry.objects.filter(eCollection = selectedCollection)
+            print(selectedCollectionEntries)
+
+
+    
+    # Use the render() function to generate an HTTP response with the list of tasks
+    response = render(request, 'polls/dashboard.html', {'collections': collections, 'selectedCollectionEntries': selectedCollectionEntries})
+    return response

@@ -31,8 +31,8 @@ class mEntry(models.Model):
     ePlace = models.CharField(max_length=200)
     eCountry = models.CharField(max_length=200)
     eQuality = models.CharField(max_length=10)
-    eFront = models.ImageField(upload_to = 'media')
-    eBack = models.ImageField(upload_to = 'media')
+    eFront = models.ImageField(upload_to = 'static/media')
+    eBack = models.ImageField(upload_to = 'static/media')
     created_by = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
  
