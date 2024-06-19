@@ -115,7 +115,10 @@ def dashboard_view(request, collection=None):
         return redirect("mcollections:dashboard_specific", collection=name)
 
     # Get the list of tasks from the database
-    collections = mCollection.objects.filter(created_by = request.user)
+    if request.user.is_superuser:
+        collections = mCollection.objects.all()
+    else:
+        collections = mCollection.objects.filter(created_by = request.user)
 
     #selectedCollectionName = request.GET.get('selection', None)
     selectedCollectionName = collection
