@@ -10,5 +10,6 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/<collection>', views.dashboard_view, name='dashboard_specific'),
     path('dashboard/<collection>/new', views.newEntryView, name='new_entry'),
+    path('dashboard/<collection>/delete', views.deleteCollectionView, name='delete_collection'),
     path('entry/<name>', views.modifyEntryView, name='entry_specific')
 ]

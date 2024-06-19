@@ -1,4 +1,5 @@
-from django.db.models import F
+from functools import reduce
+from django.db.models import F, Q
 # from django.http import HttpResponseRedirect
 # from django.shortcuts import get_object_or_404, render
 # from django.urls import reverse
@@ -13,7 +14,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, mCollection, mEntry
 from django.contrib.auth.models import Group
-
+from datetime import datetime
+import operator
 # from .models import Choice, Question
 
 
@@ -74,7 +76,7 @@ def custom_signup_view(request):
             print(form.save())
             return redirect('login')
         else: 
-            messages.error(request, 'Error: Your passwords do not follow the rules or do not match.')
+            messages.warning(request, 'Error: Your passwords do not follow the rules or do not match.')
     return render(request, 'polls/signup.html')
 
 def custom_login_view(request):
@@ -88,9 +90,9 @@ def custom_login_view(request):
             return redirect('dashboard')
         else:
             if not CustomUser.objects.filter(username=username).exists():
-                messages.error(request, 'Username does not exist.')
+                messages.warning(request, 'Username does not exist.')
             else:
-                messages.error(request, 'Password is incorrect.')
+                messages.warning(request, 'Password is incorrect.')
     return render(request, 'polls/login.html')
 
 def index_view(request):
@@ -98,6 +100,20 @@ def index_view(request):
 
 @login_required
 def dashboard_view(request, collection=None):
+    if request.method == 'POST':
+        name = request.POST.get("cName", None)
+        print(name)
+        if name is None:
+            messages.warning(request, "error")
+            return redirect('dashboard')
+        query = mCollection.objects.filter(cName = name)
+        if query.exists():
+            messages.warning(request, "Collection Already Exists")
+            return redirect('dashboard')
+        collection = mCollection(cName=name, created_by=request.user, cDate=datetime.now())
+        collection.save()
+        return redirect("mcollections:dashboard_specific", collection=name)
+
     # Get the list of tasks from the database
     collections = mCollection.objects.filter(created_by = request.user)
 
@@ -106,14 +122,19 @@ def dashboard_view(request, collection=None):
     if selectedCollectionName is None and collections.exists():
         selectedCollectionName = collections.first().cName
 
+    searchQuery = request.GET.get("search", None)
     selectedCollectionEntries = None
     if selectedCollectionName is not None:
         query = mCollection.objects.filter(cName = selectedCollectionName)
         if query.exists():
             selectedCollection = query.first()
-            selectedCollectionEntries = mEntry.objects.filter(eCollection = selectedCollection)
-            print(selectedCollectionEntries)
-    response = render(request, 'polls/dashboard.html', {'collections': collections, 'collection': selectedCollection.cName, 'selectedCollectionEntries': selectedCollectionEntries})
+            criteria = [Q(eCollection__exact = selectedCollection)]
+            if searchQuery is not None:
+                criteria.append(Q(eName__icontains = searchQuery)) 
+
+            selectedCollectionEntries = mEntry.objects.filter(reduce(operator.and_, criteria))
+    response = render(request, 'polls/dashboard.html', {'collections': collections, 'collection': selectedCollection.cName, 
+                                                        'selectedCollectionEntries': selectedCollectionEntries, 'searchQuery': searchQuery})
     return response
 
 @login_required
@@ -136,12 +157,12 @@ def newEntryView(request, collection):
 def modifyEntryView(request, name):
     query = mEntry.objects.filter(eName = name)
     if not query.exists():
-        messages.error(request, "Entry does not exist")
+        messages.warning(request, "Entry does not exist")
         return redirect("dashboard")
 
     selectedEntry = query.first()
     if selectedEntry.eCollection.created_by != request.user:
-        messages.error(request, "Unable to Edit Collection")
+        messages.warning(request, "Unable to Edit Collection")
         return redirect("dashboard")
     
     if request.method == 'POST':
@@ -156,8 +177,33 @@ def modifyEntryView(request, name):
             messages.success(request, "Entry Updated")
             return redirect("mcollections:dashboard_specific", collection=selectedEntry.eCollection.cName)
         else:
-            messages.error(request, "error")
+            messages.warning(request, "error")
             return redirect("mcollections:entry_specific", name=selectedEntry.eName)
     
     form = mEntryModelForm(instance=selectedEntry)
     return render(request, 'polls/entry.html', {'selectedEntry': selectedEntry, 'form': form})
+
+@login_required
+def deleteCollectionView(request, collection):
+    query = mCollection.objects.filter(cName = collection)
+    if not query.exists():
+        messages.warning(request, "Collection does not exist")
+        return redirect("dashboard")
+    
+    collection = query.first()
+    if collection.created_by != request.user:
+        messages.warning(request, "You do not own collection")
+        return redirect("dashboard")
+    
+    query = mEntry.objects.filter(eCollection = collection)
+    if query.exists():
+        messages.warning(request, "Collection must be empty")
+        return redirect("dashboard")
+    
+    if request.method == 'POST':
+        if "confirmDelete" in request.POST:
+            collection.delete()
+            messages.success(request, "Deleted Collection")
+            return redirect("dashboard")
+        
+    return render(request, "polls/deleteCollection.html", {'collection': collection})
