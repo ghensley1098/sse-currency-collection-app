@@ -136,7 +136,7 @@ def dashboard_view(request, collection=None):
                 criteria.append(Q(eName__icontains = searchQuery)) 
 
             selectedCollectionEntries = mEntry.objects.filter(reduce(operator.and_, criteria))
-    response = render(request, 'polls/dashboard.html', {'collections': collections, 'collection': selectedCollection.cName, 
+    response = render(request, 'polls/dashboard.html', {'collections': collections, 'collection': selectedCollectionName, 
                                                         'selectedCollectionEntries': selectedCollectionEntries, 'searchQuery': searchQuery})
     return response
 
