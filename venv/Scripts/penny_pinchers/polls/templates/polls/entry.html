@@ -107,7 +107,7 @@
               {% endfor %}
             </select>
             <div style="padding-top:20px; flex: auto; flex-wrap: wrap;">
-              <div>
+              <div style="text-align: center;">
                 <button type="submit" class="roundedButton" style="width: 25%;">Submit</button>
                 {% if form.fields.eCollection is None %}
                 <button type="button" onclick="confirmDelete()" class="roundedButton" style="width: 25%; color: red;">Delete Entry</button>
@@ -115,7 +115,7 @@
               </div>
               {% if form.fields.eCollection is None %}
               <input type="checkbox" id="shouldDelete" name="shouldDelete" hidden>
-              <button type="submit" id="deleteConfirmation" class="roundedButton" onclick="checkDelete()" style="width: 50%; color: red;" hidden>Confirm Deletion</button>
+              <button type="submit" id="deleteConfirmation" class="roundedButton center" onclick="checkDelete()" style="width: 52%; color: white; background-color: red;" hidden>Confirm Deletion</button>
               {% endif %}
             </div>
           </div>
