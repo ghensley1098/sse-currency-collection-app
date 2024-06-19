@@ -21,11 +21,11 @@ class UserCreationForm(UserCreationForm):
         user.save()
         user.groups.add(group)
         # Concatenate initials and birth year to the password
-        initials = user.first_name + user.last_name
-        birth_year = user.birth_year
-        user.set_password(str(hash(user.password + initials + str(birth_year))))
-        if commit:
-            user.save()
+        # initials = user.first_name + user.last_name
+        # birth_year = user.birth_year
+        # user.set_password(str(hash(user.password + initials + str(birth_year))))
+        # if commit:
+        #     user.save()
         return user
     
 class mEntryNewModelForm(ModelForm):
