@@ -24,15 +24,30 @@ class mCollection(models.Model):
         return now - datetime.timedelta(days=1) <= self.cDate <= now
     created_by = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
+CONTINENT_CHOICES = (
+    ('North America','North America'),
+    ('South America', 'South America'),
+    ('Europe','Europe'),
+    ('Asia','Asia'),
+    ('Oceania','Oceania'),
+)
+
+QUALITY_CHOICES = (
+    ('Mint','Mint'),
+    ('Good', 'Good'),
+    ('Normal','Normal'),
+    ('Poor','Poor'),
+)
+
 class mEntry(models.Model):
     eCollection = models.ForeignKey(mCollection, on_delete=models.CASCADE)
     eName = models.CharField(max_length=200)
     eYear =  models.IntegerField(default=0)
-    ePlace = models.CharField(max_length=200)
+    ePlace = models.CharField(max_length=200, choices=CONTINENT_CHOICES, default='North America')
     eCountry = models.CharField(max_length=200)
-    eQuality = models.CharField(max_length=10)
-    eFront = models.ImageField(upload_to = 'media')
-    eBack = models.ImageField(upload_to = 'media')
+    eQuality = models.CharField(max_length=10, choices=QUALITY_CHOICES, default='Normal')
+    eFront = models.ImageField(upload_to = 'static/media')
+    eBack = models.ImageField(upload_to = 'static/media')
     created_by = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
 
  

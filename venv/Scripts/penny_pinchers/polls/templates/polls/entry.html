@@ -1,0 +1,127 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>The Currency Collector Center</title>
+  <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <script>
+    function confirmDelete() {
+      document.getElementById("deleteConfirmation").hidden = false;
+    }
+
+    function checkDelete() {
+      document.getElementById("shouldDelete").checked = true;
+    }
+  </script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg fixed-top navbarScroll">
+    <div class="container-fluid px-5">
+      <a class="titleText navbar-brand" href="/"><b>The Currency Collector Center</b></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/signup">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/login">Log In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link navbarText" href="/admin">Administrator Login</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div style="padding-top: 85px; padding-bottom: 10px;">
+    <a class="anchor" id="home"></a>
+    <div class="rectFrame center mainboxWide" style="padding-top: 5px; padding-bottom: 5px;">
+
+      {% if selectedEntry is not None %}
+      <h1 style="color: white; text-align: center;">{{ selectedEntry.eName }} Details</h1>
+      {% else %}
+      <h1 style="color: white; text-align: center;">New Entry</h1>
+      {% endif %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="right-sidebar">
+          <div>
+            <div class="entries-box-detail" style="padding-left: 50px;">
+              <div>
+                <h4 style="color:white">Front Image:</h4>
+                <img class="entryDetailsImg" src="/{{ form.eFront.value|default_if_none:'static/polls/images/newCoin.png' }}">
+                <input style="padding-top: 10px; color: white;" type="file" name="eFront" accept="image/*" value="{{ form.eFront.value|default_if_none:'' }}"
+              id="id_eFront">
+              </div>
+              <div>
+                <h4 style="color:white">Back Image:</h4>
+                <img class="entryDetailsImg" src="/{{ form.eBack.value|default_if_none:'static/polls/images/newCoin.png' }}">
+                <input style="padding-top: 10px; color: white;" type="file" name="eBack" accept="image/*" value="{{ form.eBack.value|default_if_none:'' }}"
+                id="id_eBack">
+              </div>
+            </div>
+          </div>
+          <div>
+            {% if form.fields.eCollection is not None %}
+            <select name="eCollection" id="id_eCollection" hidden>
+              {% for name, value in form.fields.eCollection.choices %}
+              <option value="{{ name }}">{{ name }}</option>
+              {% endfor %}
+            </select>
+            {% endif %}
+            <h4 style="color:white"> Name:</h4>
+            <input style="width:100%" type="text" name="eName" value="{{ form.eName.value|default_if_none:'' }}"
+              required>
+            <h4 style="color:white">Year:</h4>
+            <input style="width:100%" type="number" name="eYear" value="{{ form.eYear.value|default_if_none:'' }}"
+              required>
+            <h4 style="color:white">Continent:</h4>
+            <select name="ePlace" selected="{{ form.ePlace.value|default_if_none:'' }}">
+              {% for name, value in form.fields.ePlace.choices %}
+              <option value="{{ value }}" {% if name == form.ePlace.value %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+            <h4 style="color:white">Country:</h4>
+            <input style="width:100%" type="text" name="eCountry" value="{{ form.eCountry.value|default_if_none:'' }}"
+              required>
+            <h4 style="color:white">Quality:</h4>
+            <select name="eQuality" selected="{{ form.eQuality.value|default_if_none:'' }}">
+              {% for name, value in form.fields.eQuality.choices %}
+              <option value="{{ value }}" {% if name == form.eQuality.value %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+            <div style="padding-top:20px; flex: auto; flex-wrap: wrap;">
+              <div>
+                <button type="submit" class="roundedButton" style="width: 25%;">Submit</button>
+                {% if form.fields.eCollection is None %}
+                <button type="button" onclick="confirmDelete()" class="roundedButton" style="width: 25%; color: red;">Delete Entry</button>
+                {% endif %}
+              </div>
+              {% if form.fields.eCollection is None %}
+              <input type="checkbox" id="shouldDelete" name="shouldDelete" hidden>
+              <button type="submit" id="deleteConfirmation" class="roundedButton" onclick="checkDelete()" style="width: 50%; color: red;" hidden>Confirm Deletion</button>
+              {% endif %}
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>
+  </div>
+  </div>
+</body>
