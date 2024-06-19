@@ -6,7 +6,7 @@ from django.views import generic
 # from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import UserCreationForm
+from .forms import UserCreationForm, mEntryModelForm, mEntryNewModelForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -97,23 +97,67 @@ def index_view(request):
     return render(request, 'polls/index.html')
 
 @login_required
-def dashboard_view(request):
+def dashboard_view(request, collection=None):
     # Get the list of tasks from the database
     collections = mCollection.objects.filter(created_by = request.user)
 
-    selectedCollectionName = request.GET.get('selection', None)
-    
-    selectedCollectionEntries = None
+    #selectedCollectionName = request.GET.get('selection', None)
+    selectedCollectionName = collection
+    if selectedCollectionName is None and collections.exists():
+        selectedCollectionName = collections.first().cName
 
+    selectedCollectionEntries = None
     if selectedCollectionName is not None:
         query = mCollection.objects.filter(cName = selectedCollectionName)
         if query.exists():
             selectedCollection = query.first()
             selectedCollectionEntries = mEntry.objects.filter(eCollection = selectedCollection)
             print(selectedCollectionEntries)
-
-
-    
-    # Use the render() function to generate an HTTP response with the list of tasks
-    response = render(request, 'polls/dashboard.html', {'collections': collections, 'selectedCollectionEntries': selectedCollectionEntries})
+    response = render(request, 'polls/dashboard.html', {'collections': collections, 'collection': selectedCollection.cName, 'selectedCollectionEntries': selectedCollectionEntries})
     return response
+
+@login_required
+def newEntryView(request, collection):
+    if request.method == 'POST':
+        form = mEntryNewModelForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            entry = form.save()
+            messages.success(request, "Created Entry")
+            return redirect("mcollections:dashboard_specific", collection=entry.eCollection.cName)
+        else:
+            print(form.errors.as_text())
+        
+        return redirect("dashboard")
+
+    form = mEntryNewModelForm(user=request.user, collection=collection)
+    return render(request, 'polls/entry.html', {'form': form})
+
+@login_required
+def modifyEntryView(request, name):
+    query = mEntry.objects.filter(eName = name)
+    if not query.exists():
+        messages.error(request, "Entry does not exist")
+        return redirect("dashboard")
+
+    selectedEntry = query.first()
+    if selectedEntry.eCollection.created_by != request.user:
+        messages.error(request, "Unable to Edit Collection")
+        return redirect("dashboard")
+    
+    if request.method == 'POST':
+        if "shouldDelete" in request.POST:
+            selectedEntry.delete()
+            messages.success(request, "Deleted Entry")
+            return redirect("mcollections:dashboard_specific", collection=selectedEntry.eCollection.cName)
+
+        form = mEntryModelForm(request.POST, request.FILES, instance=selectedEntry)
+        if form.is_valid():
+            form.save() 
+            messages.success(request, "Entry Updated")
+            return redirect("mcollections:dashboard_specific", collection=selectedEntry.eCollection.cName)
+        else:
+            messages.error(request, "error")
+            return redirect("mcollections:entry_specific", name=selectedEntry.eName)
+    
+    form = mEntryModelForm(instance=selectedEntry)
+    return render(request, 'polls/entry.html', {'selectedEntry': selectedEntry, 'form': form})

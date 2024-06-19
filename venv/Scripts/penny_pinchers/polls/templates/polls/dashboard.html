@@ -41,23 +41,43 @@
 
   <div style="padding-top: 85px; padding-bottom: 10px;">
     <a class="anchor" id="home"></a>
-    <div class="rectFrame center mainbox" style="padding-top: 5px; padding-bottom: 5px;">
+    <div class="rectFrame center mainboxWide" style="padding-top: 5px; padding-bottom: 5px;">
 
       <div class="left-sidebar-flexbox">
         <header class="header">
           <h1 style="color: white; text-align: center;">Collection Dashboard</h1>
+
+          {% if messages %}
+              <div class="messages">
+                {% for message in messages %}
+                <div style="color:black;" class="center2 alert {% if message.tags %}alert-{{ message.tags }}" {% endif %}>
+                  <p class="centered">{{ message }}</p>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
         </header>
         <main class="main-content">
-
-          <div class="entries-box">
-          {% for selectedCollectionEntry in selectedCollectionEntries %}
+          <h2 style="color: white; text-align: center; padding-bottom: 15px;">{{ collection }}</h2>
+          <div style="padding-left: 30px;" class="entries-box">
+            {% for selectedCollectionEntry in selectedCollectionEntries %}
             <div>
-              <p class="centered">test</p>
-              <img class="entryImg" src="/{{ selectedCollectionEntry.eFront }}">
+              <div class="entryImgCover">
+                <a href="{% url 'mcollections:entry_specific' name=selectedCollectionEntry.eName %}">
+                  <img class="entryImg" src="/{{ selectedCollectionEntry.eFront }}">
+                </a>
+                <p class="centered">{{ selectedCollectionEntry.eName }} <br> {{ selectedCollectionEntry.eYear }} <br> {{ selectedCollectionEntry.eCountry }} <br> {{ selectedCollectionEntry.eQuality }} <br> Click to Edit</p>
+              </div>
             </div>
-          {% endfor %}
+            {% endfor %}
             <div>
-              <img class="entryImg" src="{% static 'polls/images/newCoin.png' %}">
+              <div class="entryImgCover">
+                <a href="{% url 'mcollections:new_entry' collection=collection %}">
+                  <img class="entryImg" src="{% static 'polls/images/newCoin.png' %}">
+                </a>
+                <p class="centered">Click to Create New Entry</p>
+              </div>
             </div>
           </div>
 
@@ -66,12 +86,12 @@
           <h2 style="color: white; text-align: center;">My Collections</h2>
 
           <ul class="no-bullets" style="color: white;">
-            <form>
-              {% for collection in collections %}
+            {% for collection in collections %}
+            <a class="removelink" href="{% url 'mcollections:dashboard_specific' collection=collection.cName %}">
               <li><button name="selection" value="{{ collection.cName }}" type="submit" class="roundedButton center"
                   style="width: 50%;">{{ collection.cName }}</button></li>
-              {% endfor %}
-            </form>
+            </a>
+            {% endfor %}
             <li><button class="roundedButton center" style="width: 50%;">New Collection</button></li>
           </ul>
         </section>
